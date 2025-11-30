@@ -37,14 +37,14 @@ app = Flask(__name__)
 app.secret_key = "dev-secret"  # For demo only
 
 # Configuration
-OAUTH_AUTH_URL = os.getenv("OAUTH_AUTH_URL", "http://localhost:8000/oauth/authorize")
-OAUTH_TOKEN_URL = os.getenv("OAUTH_TOKEN_URL", "http://localhost:8000/oauth/token")
-CLIENT_ID = os.getenv("CLIENT_ID", "client-123")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET", "secret-xyz")
-REDIRECT_URI = os.getenv("REDIRECT_URI", "http://localhost:5002/oauth/callback")
-NOTES_API_URL = os.getenv("NOTES_API_URL", "http://localhost:5001")
+OAUTH_AUTH_URL = os.getenv("OAUTH_AUTH_URL", "")
+OAUTH_TOKEN_URL = os.getenv("OAUTH_TOKEN_URL", "")
+CLIENT_ID = os.getenv("CLIENT_ID", "")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET", "")
+REDIRECT_URI = os.getenv("REDIRECT_URI", "")
+NOTES_API_URL = os.getenv("NOTES_API_URL", "")
 
-REQUESTED_SCOPES = "read:notes write:notes"
+REQUESTED_SCOPES = "notes:read notes:write"
 
 # Simple in-memory token storage per session
 # In real systems, use a DB or encrypted store
