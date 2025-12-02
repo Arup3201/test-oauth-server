@@ -30,10 +30,12 @@ Dependencies:
 """
 
 from flask import Flask, request, redirect, jsonify, session
+from flask_cors import CORS, cross_origin
 import requests
 import os
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = "dev-secret"  # For demo only
 
 # Configuration
@@ -68,6 +70,7 @@ def oauth_login():
 
 
 @app.route("/oauth/callback")
+@cross_origin()
 def oauth_callback():
     """
     Step 2: Receive authorization code from OAuth server.
@@ -76,6 +79,10 @@ def oauth_callback():
     error = request.args.get("error")
     if error:
         return jsonify({"error": error}), 400
+
+    auth = request.args.get("auth")
+    if not auth:
+        return jsonify({"error": "authentication_error"}), 401
 
     code = request.args.get("code")
     if not code:
@@ -88,9 +95,10 @@ def oauth_callback():
         "redirect_uri": REDIRECT_URI,
         "client_id": CLIENT_ID,
         "client_secret": CLIENT_SECRET,
+        "auth": auth
     }
 
-    token_resp = requests.post(OAUTH_TOKEN_URL, data=data)
+    token_resp = requests.post(OAUTH_TOKEN_URL, json=data, headers={"Content-type": "application/json"})
 
     if token_resp.status_code != 200:
         return jsonify({"error": "token_exchange_failed", "details": token_resp.text}), 400
